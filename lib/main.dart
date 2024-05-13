@@ -2,11 +2,16 @@ import 'package:daily_execises/bottomnavbar.dart';
 import 'package:daily_execises/category_card.dart';
 import 'package:daily_execises/constant.dart';
 import 'package:daily_execises/screens/details_screen.dart';
+import 'package:daily_execises/screens/exercise.dart';
+import 'package:daily_execises/screens/menu.dart';
+import 'package:daily_execises/screens/yoga.dart';
 import 'package:daily_execises/search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
 void main() {
   runApp(const MyApp());
@@ -36,8 +41,14 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  var scaffoldKey = GlobalKey<ScaffoldState>();
     var size = MediaQuery.of(context).size;
     return Scaffold(
+      key: scaffoldKey,
+       drawer: new Drawer(
+       child:  MenuOption(),
+        
+       ),
       bottomNavigationBar: DefaultNav(),
       body: Stack(
         children: [
@@ -57,15 +68,21 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.topRight,
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 52,
-                      width: 52,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFF2BEA1),
-                        shape: BoxShape.circle,
+                    child: GestureDetector(
+                      onTap: (){
+                        scaffoldKey.currentState!.openDrawer();
+                      },
+                      
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 52,
+                        width: 52,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFF2BEA1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: SvgPicture.asset("assets/icons/menu.svg"),
                       ),
-                      child: SvgPicture.asset("assets/icons/menu.svg"),
                     ),
                   ),
                   Text(
@@ -91,28 +108,36 @@ class HomeScreen extends StatelessWidget {
                         CategoryCard(
                           svgSrc: "assets/icons/Excrecises.svg",
                           title: "Kegel Exercises",
-                          press: () {},
+                          press: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Exercise(),
+                              ),
+                            );
+                          },
                         ),
                         CategoryCard(
                           svgSrc: "assets/icons/Meditation.svg",
                           title: "Meditation",
                           press: () {
-                            
-                               Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => DetailScreen())
-                                
-                          );
-                          
-                           
-                           
+                                builder: (context) => DetailScreen(),
+                              ),
+                            );
                           },
                         ),
                         CategoryCard(
                           svgSrc: "assets/icons/yoga.svg",
                           title: "Yoga",
-                          press: () {},
+                          press: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => YogaPage()));
+                          },
                         ),
                       ],
                     ),
@@ -162,4 +187,3 @@ class DefaultNav extends StatelessWidget {
     );
   }
 }
-

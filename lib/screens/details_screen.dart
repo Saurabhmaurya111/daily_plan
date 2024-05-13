@@ -2,6 +2,7 @@ import 'package:daily_execises/bottomnavbar.dart';
 import 'package:daily_execises/constant.dart';
 import 'package:daily_execises/main.dart';
 import 'package:daily_execises/search_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
@@ -155,11 +156,13 @@ class SessionCard extends StatelessWidget {
   final int sessionNum;
   final bool isDone;
   final void Function()? press;
+  final Color iconcolor ;
   const SessionCard({
     super.key,
     required this.sessionNum,
     this.isDone = false,
-    required this.press,
+    required this.press, 
+     this.iconcolor = kBlueColor,
   });
 
   @override
@@ -190,16 +193,18 @@ class SessionCard extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    Container(
-                      height: 42,
-                      width: 43,
-                      decoration: BoxDecoration(
-                          color: isDone ? kBlueColor : Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: kBlueColor)),
-                      child: Icon(
-                        Icons.play_arrow,
-                        color: isDone ? Colors.white : kBlueColor,
+                    Expanded(
+                      child: Container(
+                        height: 42,
+                        width: 43,
+                        decoration: BoxDecoration(
+                            color: isDone ? iconcolor : Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: iconcolor)),
+                        child: Icon(
+                          Icons.play_arrow,
+                          color: isDone ? Colors.white : iconcolor,
+                        ),
                       ),
                     ),
                     const SizedBox(
