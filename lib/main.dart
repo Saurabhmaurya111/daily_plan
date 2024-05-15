@@ -4,13 +4,16 @@ import 'package:daily_execises/constant.dart';
 import 'package:daily_execises/screens/details_screen.dart';
 import 'package:daily_execises/screens/exercise.dart';
 import 'package:daily_execises/screens/menu.dart';
+import 'package:daily_execises/screens/setting_page.dart';
 import 'package:daily_execises/screens/yoga.dart';
 import 'package:daily_execises/search_bar.dart';
+import 'package:daily_execises/to_do_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
 void main() {
@@ -23,6 +26,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+    );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -41,14 +47,13 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  var scaffoldKey = GlobalKey<ScaffoldState>();
+    var scaffoldKey = GlobalKey<ScaffoldState>();
     var size = MediaQuery.of(context).size;
     return Scaffold(
       key: scaffoldKey,
-       drawer: new Drawer(
-       child:  MenuOption(),
-        
-       ),
+      drawer: new Drawer(
+        child: MenuOption(),
+      ),
       bottomNavigationBar: DefaultNav(),
       body: Stack(
         children: [
@@ -69,10 +74,9 @@ class HomeScreen extends StatelessWidget {
                   Align(
                     alignment: Alignment.topRight,
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         scaffoldKey.currentState!.openDrawer();
                       },
-                      
                       child: Container(
                         alignment: Alignment.center,
                         height: 52,
@@ -169,7 +173,12 @@ class DefaultNav extends StatelessWidget {
           BottomNavBar(
             svgSrc: "assets/icons/calendar.svg",
             title: "Today",
-            press: () {},
+            press: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TodoList()),
+              );
+            },
           ),
           BottomNavBar(
             svgSrc: "assets/icons/gym.svg",
@@ -180,7 +189,12 @@ class DefaultNav extends StatelessWidget {
           BottomNavBar(
             svgSrc: "assets/icons/Settings.svg",
             title: "Settings",
-            press: () {},
+            press: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingPage()),
+              );
+            },
           ),
         ],
       ),
