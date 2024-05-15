@@ -4,9 +4,66 @@ import 'package:daily_execises/widgets/to_do_component.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class TodoList extends StatelessWidget {
+class TodoList extends StatefulWidget {
   TodoList({super.key});
+
+  @override
+  State<TodoList> createState() => _TodoListState();
+}
+
+class _TodoListState extends State<TodoList> {
   final todosList = ToDo.todoList();
+  final _todoContoller = TextEditingController();
+  
+  List<ToDo> _foundToDo = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _foundToDo = todosList;
+    super.initState();
+  }
+
+  void _runFilter(String enteredKeyword) {
+    List<ToDo> result = [];
+    if (enteredKeyword.isEmpty) {
+      result = todosList;
+    } else {
+      result = todosList
+          .where((item) => item.todoText!
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
+    }
+
+    setState(() {
+      _foundToDo = result;
+    });
+  }
+
+  void _handleToDoChange(ToDo todo) {
+    setState(() {
+      todo.isDone = !todo.isDone;
+    });
+  }
+
+  void _deleteToDOitem(String id) {
+    setState(() {
+      todosList.removeWhere((item) => item.id == id);
+    });
+  }
+
+  void _addToDoItem(String toDo) {
+    setState(() {
+      todosList.add(ToDo(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          todoText: toDo));
+    });
+    _todoContoller.clear();
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +75,9 @@ class TodoList extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             child: Column(
               children: [
-                serachBox(),
+                searchedBox(
+                 onChanged: _runFilter,
+                ),
                 Expanded(
                   child: ListView(
                     children: [
@@ -30,7 +89,12 @@ class TodoList extends StatelessWidget {
                               fontSize: 30, fontWeight: FontWeight.w500),
                         ),
                       ),
-                      for (ToDo todoo in todosList) TodoListComp(todo: todoo),
+                      for (ToDo todoo in _foundToDo.reversed)
+                        TodoListComp(
+                          todo: todoo,
+                          onToDochanged: _handleToDoChange,
+                          onDeleteItem: _deleteToDOitem,
+                        ),
                     ],
                   ),
                 )
@@ -62,6 +126,8 @@ class TodoList extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: TextField(
+                      
+                      controller: _todoContoller,
                       decoration: InputDecoration(
                         hintText: 'Add a new todo item',
                         border: InputBorder.none,
@@ -79,7 +145,9 @@ class TodoList extends StatelessWidget {
                       "+",
                       style: TextStyle(fontSize: 40, color: Colors.white),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      _addToDoItem(_todoContoller.text);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: tdBlue,
                       minimumSize: Size(60, 60),
@@ -125,11 +193,17 @@ class TodoList extends StatelessWidget {
   }
 }
 
-class serachBox extends StatelessWidget {
-  const serachBox({
+class searchedBox extends StatelessWidget {
+   final Function(String) onChanged;
+
+  const searchedBox({
     super.key,
+    required this.onChanged,
   });
 
+  // const searchedBox({
+  //   super.key,
+  // });
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -139,6 +213,7 @@ class serachBox extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: TextField(
+        onChanged: onChanged,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(0),
           prefixIcon: Icon(

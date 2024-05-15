@@ -13,10 +13,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 
 GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
-void main() {
+void main() async {
+
+  //init the hive 
+  await Hive.initFlutter();
+
+  //open a box 
+ var box = await Hive.openBox('mybox');
+
   runApp(const MyApp());
 }
 
